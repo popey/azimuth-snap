@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Azimuth
+Exec=azimuth
+Icon=${SNAP}/meta/gui/azimuth.png
+Categories=Games

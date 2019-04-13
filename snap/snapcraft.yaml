@@ -1,0 +1,40 @@
+name: azimuth
+version: "1.0.2"
+summary: Azimuth - A metroidvania with vector graphics 
+base: core18
+description: |
+  Azimuth is a metroidvania game, with vector graphics. Azimuth is inspired by such 
+  games as the Metroid series (particularly Super Metroid and Metroid Fusion),
+  SketchFighter 4000 Alpha, and Star Control II (a.k.a. The Ur-Quan Masters).
+  All fine games that are well worth your time.
+
+grade: stable
+confinement: strict
+
+parts:
+  azimuth:
+    plugin: make
+    source: https://github.com/mdsteele/azimuth.git
+    override-build: |
+      make
+      cp out/debug/host/Azimuth $SNAPCRAFT_PART_INSTALL
+    build-packages:
+      - libsdl1.2-dev
+      - libgl1-mesa-dev
+    stage-packages:
+      - libglu1-mesa
+      - libsdl1.2debian
+      - libpulse0
+      - libslang2
+      - libasan4
+
+apps:
+  azimuth:
+    environment:
+      LD_LIBRARY_PATH: "$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
+    command: Azimuth
+    plugs:
+      - x11
+      - pulseaudio
+      - opengl
+      - screen-inhibit-control
