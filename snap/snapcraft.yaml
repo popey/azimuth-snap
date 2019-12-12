@@ -1,5 +1,5 @@
 name: azimuth
-version: "1.0.2"
+adopt-info: azimuth
 summary: Azimuth - A metroidvania with vector graphics 
 base: core18
 description: |
@@ -18,6 +18,7 @@ parts:
     override-build: |
       make
       cp out/debug/host/Azimuth $SNAPCRAFT_PART_INSTALL
+      snapcraftctl set-version $(git -C ../src describe --tags  | sed 's/v//')      
     build-packages:
       - libsdl1.2-dev
       - libgl1-mesa-dev
@@ -27,11 +28,20 @@ parts:
       - libpulse0
       - libslang2
       - libasan4
+      - freeglut3
 
 apps:
   azimuth:
     environment:
+      SHELL: bash
+      LC_ALL: C.UTF-8
+      SNAPCRAFT_ARCH_TRIPLET: ${SNAPCRAFT_ARCH_TRIPLET}
+      __EGL_VENDOR_LIBRARY_DIRS: $SNAP/etc/glvnd/egl_vendor.d:$SNAP/usr/share/glvnd/egl_vendor.d
+      LIBGL_DRIVERS_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/dri
+      LIBVA_DRIVERS_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/dri
       LD_LIBRARY_PATH: "$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
+      HOME: "$SNAP_USER_DATA"
+      XDG_CACHE_HOME: "$SNAP_USER_DATA/.cache" 
     command: Azimuth
     plugs:
       - x11
