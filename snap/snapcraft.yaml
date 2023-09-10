@@ -60,6 +60,23 @@ parts:
     after: [alsa-mixin]
     plugin: make
     source: https://github.com/mdsteele/azimuth.git
+    override-pull: |
+      snapcraftctl pull
+      last_committed_tag="$(git tag -l --sort=version:refname | tail -n 1 | tr -d 'v')"
+      echo $last_committed_tag
+      last_released_tag="$(snap info $SNAPCRAFT_PROJECT_NAME | awk '$1 == "latest/beta:" { print $2 }')"
+      echo $last_released_tag
+      # If the latest tag from the upstream project has not been released to
+      # beta, build that tag instead of master.
+      if [ "${last_committed_tag}" != "${last_released_tag}" ]; then
+        git fetch
+        git checkout "v${last_committed_tag}"
+        echo "Setting version to $last_committed_tag"
+        snapcraftctl set-version "$(echo $last_committed_tag)"
+      else
+        echo "Setting version to $(git rev-parse --short HEAD)"
+        snapcraftctl set-version "$(git rev-parse --short HEAD)"
+      fi
     override-build: |
       make
       cp out/debug/host/Azimuth $SNAPCRAFT_PART_INSTALL
