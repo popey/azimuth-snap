@@ -47,7 +47,7 @@ parts:
     override-build: |
       BUILDTYPE=release make
       cp out/release/host/Azimuth $SNAPCRAFT_PART_INSTALL
-      snapcraftctl set-version $(git -C ../src describe --tags  | sed 's/v//')
+      snapcraftctl set-version $(git -C ../src describe --tags)
     build-packages:
       - libsdl2-dev
       - libgl1-mesa-dev
