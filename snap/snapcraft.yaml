@@ -44,6 +44,7 @@ parts:
     plugin: make
     source: https://github.com/mdsteele/azimuth.git
     override-build: |
+      sed -i 's/-Werror//g' Makefile
       BUILDTYPE=release make
       cp out/release/host/Azimuth $CRAFT_PART_INSTALL
       craftctl set version=$(git -C ../src for-each-ref --sort=-creatordate --format '%(refname:short)' refs/tags | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?$' | head -n 1)
