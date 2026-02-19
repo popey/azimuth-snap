@@ -54,7 +54,7 @@ parts:
       - libsdl2-2.0-0
       - libpulse0
       - libglu1-mesa
-      - freeglut3
+      - freeglut3t64
       - libasyncns0
       - libogg0
       - libsndfile1
