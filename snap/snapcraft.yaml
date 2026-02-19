@@ -1,9 +1,9 @@
 name: azimuth
 adopt-info: azimuth
-summary: Azimuth - A metroidvania with vector graphics 
-base: core20
+summary: Azimuth - A metroidvania with vector graphics
+base: core24
 description: |
-  Azimuth is a metroidvania game, with vector graphics. Azimuth is inspired by such 
+  Azimuth is a metroidvania game, with vector graphics. Azimuth is inspired by such
   games as the Metroid series (particularly Super Metroid and Metroid Fusion),
   SketchFighter 4000 Alpha, and Star Control II (a.k.a. The Ur-Quan Masters).
   All fine games that are well worth your time.
@@ -11,14 +11,13 @@ description: |
 grade: stable
 confinement: strict
 
-architectures:
-  - build-on: amd64
-  - build-on: arm64
-  - build-on: armhf
+platforms:
+  amd64:
+  arm64:
 
 layout:
-  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:
-    bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
+  /usr/lib/$CRAFT_ARCH_TRIPLET/alsa-lib:
+    bind: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/alsa-lib
 
 parts:
   alsa-pulseaudio:
@@ -46,15 +45,14 @@ parts:
     source: https://github.com/mdsteele/azimuth.git
     override-build: |
       BUILDTYPE=release make
-      cp out/release/host/Azimuth $SNAPCRAFT_PART_INSTALL
-      snapcraftctl set-version $(git -C ../src for-each-ref --sort=-creatordate --format '%(refname:short)' refs/tags | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?$' | head -n 1)
+      cp out/release/host/Azimuth $CRAFT_PART_INSTALL
+      craftctl set version=$(git -C ../src for-each-ref --sort=-creatordate --format '%(refname:short)' refs/tags | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?$' | head -n 1)
     build-packages:
       - libsdl2-dev
       - libgl1-mesa-dev
     stage-packages:
       - libsdl2-2.0-0
       - libpulse0
-      - libasan5
       - libglu1-mesa
       - freeglut3
       - libasyncns0
@@ -64,21 +62,15 @@ parts:
       - libxcb1
       - libxdmcp6
 
-
 apps:
   azimuth:
-    extensions: [ gnome-3-38 ]
+    extensions: [ gnome ]
     environment:
       ALSA_CONFIG_PATH: "$SNAP/etc/asound.conf"
       SHELL: bash
       LC_ALL: C.UTF-8
-      SNAPCRAFT_ARCH_TRIPLET: ${SNAPCRAFT_ARCH_TRIPLET}
-      __EGL_VENDOR_LIBRARY_DIRS: $SNAP/etc/glvnd/egl_vendor.d:$SNAP/usr/share/glvnd/egl_vendor.d
-      LIBGL_DRIVERS_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/dri
-      LIBVA_DRIVERS_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/dri
-      LD_LIBRARY_PATH: "$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
       HOME: "$SNAP_USER_DATA"
-      XDG_CACHE_HOME: "$SNAP_USER_DATA/.cache" 
+      XDG_CACHE_HOME: "$SNAP_USER_DATA/.cache"
     command: Azimuth
     plugs:
       - x11
