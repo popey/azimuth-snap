@@ -14,6 +14,7 @@ confinement: strict
 platforms:
   amd64:
   arm64:
+  armhf:
 
 layout:
   /usr/lib/$CRAFT_ARCH_TRIPLET/alsa-lib:
@@ -46,11 +47,13 @@ parts:
     override-build: |
       sed -i 's/-Werror//g' Makefile
       BUILDTYPE=release make
+      patchelf --clear-execstack out/release/host/Azimuth
       cp out/release/host/Azimuth $CRAFT_PART_INSTALL
       craftctl set version=$(git -C ../src for-each-ref --sort=-creatordate --format '%(refname:short)' refs/tags | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?$' | head -n 1)
     build-packages:
       - libsdl2-dev
       - libgl1-mesa-dev
+      - patchelf
     stage-packages:
       - libsdl2-2.0-0
       - libpulse0
