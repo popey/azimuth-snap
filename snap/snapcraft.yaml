@@ -1,5 +1,5 @@
 name: azimuth
-adopt-info: azimuth
+version: 'v1.0.4'
 summary: Azimuth - A metroidvania with vector graphics
 base: core24
 description: |
@@ -44,12 +44,12 @@ parts:
     after: [alsa-pulseaudio]
     plugin: make
     source: https://github.com/mdsteele/azimuth.git
+    source-tag: v1.0.4
     override-build: |
       sed -i 's/-Werror//g' Makefile
       BUILDTYPE=release make
       patchelf --clear-execstack out/release/host/Azimuth
       cp out/release/host/Azimuth $CRAFT_PART_INSTALL
-      craftctl set version=$(git -C ../src for-each-ref --sort=-creatordate --format '%(refname:short)' refs/tags | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?$' | head -n 1)
     build-packages:
       - libsdl2-dev
       - libgl1-mesa-dev
